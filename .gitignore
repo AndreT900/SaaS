@@ -42,3 +42,6 @@ frontend/dist/
 # Python virtual environments
 venv/
 .venv/
+
+DEPLOY_CHECKLIST.md
+ROADMAP.md
