@@ -1,0 +1,44 @@
+# Environment & Secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Node
+node_modules/
+frontend/node_modules/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+*.log
+
+# Credentials (never commit)
+CREDENTIALS_DEV.md
+
+# Italian README (internal use only)
+READMEITA.md
+
+# Frontend build output
+frontend/dist/
+
+# Python virtual environments
+venv/
+.venv/

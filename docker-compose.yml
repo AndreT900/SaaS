@@ -1,0 +1,126 @@
+services:
+  # mongo: Removed to use MongoDB Cloud
+
+  core:
+    build:
+      context: ./services/core
+      dockerfile: Dockerfile
+    container_name: core
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./services/core:/app
+    command: uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
+    env_file:
+      - .env
+    networks:
+      - backend_net
+    profiles: [ "core", "all" ]
+
+  chat:
+    build:
+      context: ./services/chat
+      dockerfile: Dockerfile
+    container_name: chat
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./services/chat:/app
+    depends_on:
+      - ai_engine
+    command: uvicorn src.main:app --host 0.0.0.0 --port 8001 --reload
+    env_file:
+      - .env
+    networks:
+      - backend_net
+    profiles: [ "chat", "all" ]
+
+  meetings:
+    build:
+      context: ./services/meetings
+      dockerfile: Dockerfile
+    container_name: meetings
+    ports:
+      - "8002:8002"
+    volumes:
+      - ./services/meetings:/app
+    depends_on:
+      - ai_engine
+    command: uvicorn src.main:app --host 0.0.0.0 --port 8002 --reload
+    env_file:
+      - .env
+    networks:
+      - backend_net
+    profiles: [ "meetings", "all" ]
+
+  documents:
+    build:
+      context: ./services/documents
+      dockerfile: Dockerfile
+    container_name: documents
+    ports:
+      - "8003:8003"
+    volumes:
+      - ./services/documents:/app
+    depends_on:
+      - ai_engine
+    command: uvicorn src.main:app --host 0.0.0.0 --port 8003 --reload
+    env_file:
+      - .env
+    networks:
+      - backend_net
+    profiles: [ "documents", "all" ]
+
+  calendar:
+    build:
+      context: ./services/calendar
+      dockerfile: Dockerfile
+    container_name: calendar
+    ports:
+      - "8004:8004"
+    volumes:
+      - ./services/calendar:/app
+    command: uvicorn src.main:app --host 0.0.0.0 --port 8004 --reload
+    env_file:
+      - .env
+    networks:
+      - backend_net
+    profiles: [ "calendar", "all" ]
+
+  ai_engine:
+    build:
+      context: ./services/ai_engine
+      dockerfile: Dockerfile
+    container_name: ai_engine
+    ports:
+      - "8005:8005"
+    volumes:
+      - ./services/ai_engine:/app
+    command: uvicorn src.main:app --host 0.0.0.0 --port 8005 --reload
+    env_file:
+      - .env
+    networks:
+      - backend_net
+    profiles: [ "ai", "all" ]
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    networks:
+      - backend_net
+    depends_on:
+      - core
+    profiles: [ "frontend", "all" ]
+
+networks:
+  backend_net:
+    driver: bridge
